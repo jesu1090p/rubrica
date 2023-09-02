@@ -73,6 +73,11 @@ function Create() {
       errors.teamURL = 'La URL del equipo debe tener entre 10 y 50 caracteres';
     }
 
+    if (newSport.image.length < 10 || newSport.image.length > 150) {
+      isValid = false;
+      errors.teamURL = 'La URL del equipo debe tener entre 10 y 150 caracteres';
+    }
+
     setErrorMessages(errors);
     return isValid;
   };
@@ -172,6 +177,7 @@ function Create() {
             onChange={handleInputChange}
             required
           />
+          {errorMessages.image && <p className="error-message">{errorMessages.image}</p>}
         </div>
         <button type="submit">Guardar Deporte</button>
       </form>
