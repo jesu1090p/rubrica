@@ -101,7 +101,7 @@ function Create() {
 
       localStorage.setItem('sportsData', JSON.stringify([...sportsData, newSport]));
       setTimeout(() => {
-        navigate('/content');
+        navigate('/Content');
       }, 2000);
     }
   };
