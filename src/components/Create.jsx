@@ -1,129 +1,182 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/create.css';
 
-const Create = ({ addSport }) => {
-  const history = useNavigate();
-
-  const initialFormData = {
+function Create() {
+  const navigate = useNavigate();
+  const [newSport, setNewSport] = useState({
     title: '',
     description: '',
     category: '',
-    team: '',
-    link: '',
-  };
+    name: '',
+    teamURL: '',
+    image: '',
+  });
 
-  const [formData, setFormData] = useState(initialFormData);
-  const [formErrors, setFormErrors] = useState({});
+  const [sportsData, setSportsData] = useState([]);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [errorMessages, setErrorMessages] = useState({
+    title: '',
+    description: '',
+    category: '',
+    name: '',
+    teamURL: '',
+  });
 
-  const categories = ['Motor', 'Mesa', 'Equipo'];
+  useEffect(() => {
+    const storedData = localStorage.getItem('sportsData');
+    if (storedData) {
+      setSportsData(JSON.parse(storedData));
+    }
+  }, []);
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setNewSport({
+      ...newSport,
+      [name]: value,
+    });
   };
 
   const validateForm = () => {
-    const errors = {};
-    if (!formData.title || formData.title.length < 3 || formData.title.length > 20) {
-      errors.title = 'El título debe tener entre 3 y 20 caracteres.';
+    let isValid = true;
+    const errors = {
+      title: '',
+      description: '',
+      category: '',
+      name: '',
+      teamURL: '',
+    };
+
+    if (newSport.title.length < 3 || newSport.title.length > 20) {
+      isValid = false;
+      errors.title = 'El título debe tener entre 3 y 20 caracteres';
     }
-    if (!formData.description || formData.description.length < 50 || formData.description.length > 200) {
-      errors.description = 'La descripción debe tener entre 50 y 200 caracteres.';
+
+    if (newSport.description.length < 50 || newSport.description.length > 200) {
+      isValid = false;
+      errors.description = 'La descripción debe tener entre 50 y 200 caracteres';
     }
-    if (!formData.category) {
-      errors.category = 'Por favor, seleccione una categoría.';
+
+    if (!newSport.category) {
+      isValid = false;
+      errors.category = 'Seleccione una categoría';
     }
-    if (!formData.team || formData.team.length < 3 || formData.team.length > 15) {
-      errors.team = 'El nombre del equipo debe tener entre 3 y 15 caracteres.';
+
+    if (newSport.name.length < 3 || newSport.name.length > 15) {
+      isValid = false;
+      errors.name = 'El nombre del equipo debe tener entre 3 y 15 caracteres';
     }
-    if (!formData.link || formData.link.length < 10 || formData.link.length > 50) {
-      errors.link = 'El enlace debe tener entre 10 y 50 caracteres.';
+
+    if (newSport.teamURL.length < 10 || newSport.teamURL.length > 50) {
+      isValid = false;
+      errors.teamURL = 'La URL del equipo debe tener entre 10 y 50 caracteres';
     }
-    return errors;
+
+    setErrorMessages(errors);
+    return isValid;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errors = validateForm();
-    if (Object.keys(errors).length === 0) {
-      // Los datos son válidos, se pueden agregar
-      addSport(formData);
-      setFormData(initialFormData);
-      history.push('/content'); // Redirige a la vista Content
-    } else {
-      // Hay errores en el formulario
-      setFormErrors(errors);
+
+    if (validateForm()) {
+      setSportsData([...sportsData, newSport]);
+
+      setNewSport({
+        title: '',
+        description: '',
+        category: '',
+        name: '',
+        teamURL: '',
+        image: '',
+      });
+
+      setShowSuccessMessage(true);
+
+      localStorage.setItem('sportsData', JSON.stringify([...sportsData, newSport]));
+      setTimeout(() => {
+        navigate('/content');
+      }, 2000);
     }
   };
 
   return (
-    <div className="create">
-      <h1>Crear una nueva tarjeta de deporte</h1>
+    <div className="create-container">
+      <h1>Crear Nuevo Deporte</h1>
+      {showSuccessMessage && <p className="success-message">Deporte creado con éxito.</p>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Título:</label>
           <input
             type="text"
             name="title"
-            value={formData.title}
-            onChange={handleChange}
+            placeholder="Deporte"
+            value={newSport.title}
+            onChange={handleInputChange}
+            required
           />
-          {formErrors.title && <span className="error">{formErrors.title}</span>}
+          {errorMessages.title && <p className="error-message">{errorMessages.title}</p>}
         </div>
-
         <div className="form-group">
-          <label>Descripción:</label>
           <textarea
             name="description"
-            value={formData.description}
-            onChange={handleChange}
+            placeholder="Descripción"
+            value={newSport.description}
+            onChange={handleInputChange}
+            required
           />
-          {formErrors.description && <span className="error">{formErrors.description}</span>}
+          {errorMessages.description && <p className="error-message">{errorMessages.description}</p>}
         </div>
-
         <div className="form-group">
-          <label>Categoría:</label>
           <select
             name="category"
-            value={formData.category}
-            onChange={handleChange}
+            value={newSport.category}
+            onChange={handleInputChange}
+            required
           >
-            <option value="">Seleccione una categoría</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
-            ))}
+            <option value="">Selecione</option>
+            <option value="Deportes de motor">Deportes de motor</option>
+            <option value="Deportes de mesa">Deportes de mesa</option>
+            <option value="Deportes por equipo">Deportes por equipo</option>
           </select>
-          {formErrors.category && <span className="error">{formErrors.category}</span>}
+          {errorMessages.category && <p className="error-message">{errorMessages.category}</p>}
         </div>
-
         <div className="form-group">
-          <label>Equipo:</label>
           <input
             type="text"
-            name="team"
-            value={formData.team}
-            onChange={handleChange}
+            name="name"
+            placeholder="Nombre del equipo"
+            value={newSport.name}
+            onChange={handleInputChange}
+            required
           />
-          {formErrors.team && <span className="error">{formErrors.team}</span>}
+          {errorMessages.name && <p className="error-message">{errorMessages.name}</p>}
         </div>
-
         <div className="form-group">
-          <label>Enlace:</label>
           <input
             type="text"
-            name="link"
-            value={formData.link}
-            onChange={handleChange}
+            name="teamURL"
+            placeholder="Pagina web"
+            value={newSport.teamURL}
+            onChange={handleInputChange}
+            required
           />
-          {formErrors.link && <span className="error">{formErrors.link}</span>}
+          {errorMessages.teamURL && <p className="error-message">{errorMessages.teamURL}</p>}
         </div>
-
-        <button type="submit">Guardar</button>
+        <div className="form-group">
+          <input
+            type="text"
+            name="image"
+            placeholder="URL de la imagen"
+            value={newSport.image}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <button type="submit">Guardar Deporte</button>
       </form>
     </div>
   );
-};
+}
 
 export default Create;

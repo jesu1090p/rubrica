@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/nav-foot.css'
 
@@ -7,7 +6,7 @@ const Navbar = () => {
     <nav className="navbar">
       <ul>
         <li>
-          <Link to="/">Overview</Link>
+          <Link to="/">Inicio</Link>
         </li>
         <li>
           <Link to="/Content">Content</Link>

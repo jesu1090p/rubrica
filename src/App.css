@@ -1,4 +1,7 @@
-
+.App {
+  
+  background-image: linear-gradient( 178.9deg,  rgba(39,160,209,1) -4.8%, rgba(149,242,86,1) 109.8% );
+}
 .App-header {
   background-color: #282c34;
   min-height: 20vh;

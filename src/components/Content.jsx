@@ -1,52 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import '../styles/content.css'
 
-const Content = () => {
-  const [sportsData, setSportsData] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+function Content() {
+  const [filteredSports, setFilteredSports] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('Todos');
 
   useEffect(() => {
-    // Cargar los datos de deportes desde localStorage o useContext
-    // setSportsData([...]); // Aquí deberías cargar los datos
-  }, []);
+    const storedData = localStorage.getItem('sportsData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
 
-  const filteredSports = selectedCategory
-    ? sportsData.filter((sport) => sport.category === selectedCategory)
-    : sportsData;
+    if (selectedCategory === 'Todos') {
+      setFilteredSports(parsedData);
+    } else {
+      const filtered = parsedData.filter((sport) => sport.category === selectedCategory);
+      setFilteredSports(filtered);
+    }
+  }
+}, [selectedCategory]);
 
   return (
-    <div className="content">
-      <h1>Deportes</h1>
-      <div className="filter">
+    <div>
+      <div className="selector">
+        <h1 className='content'>Contenido de Deportes</h1>
+        <label>Filtrar por categoría:</label>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          <option value="">Todas las categorías</option>
-          <option value="Motor">Deportes de motor</option>
-          <option value="Mesa">Deportes de mesa</option>
-          <option value="Equipo">Deportes por equipo</option>
+          >
+          <option value="Todos">Todos</option>
+          <option value="Deportes de motor">Deportes de motor</option>
+          <option value="Deportes de mesa">Deportes de mesa</option>
+          <option value="Deportes por equipo">Deportes por equipo</option>
         </select>
       </div>
-
-      <div className="cards">
-        {filteredSports.map((sport, index) => (
-          <div key={index} className="card">
-            <img src={sport.image} alt={sport.title} />
-            <h2>{sport.title}</h2>
+      <div className="sports-cards">
+        {filteredSports.map((sport) => (
+          <div className="sport-card" key={sport.id}>
+            <img src={sport.image} alt={sport.title} width={200} />
+            <h2 style={{textAlign:"center"}}>{sport.title}</h2>
             <p>{sport.description}</p>
-            <a href={sport.link} target="_blank" rel="noopener noreferrer">
-              Equipo: {sport.team}
-            </a>
+            <p>
+              Equipo: <a href={sport.teamURL} target="_blank" rel="noopener noreferrer">{sport.name}</a>
+              <br/>
+              Categoria: <span>{sport.category}</span>
+            </p>
           </div>
         ))}
       </div>
-
-      <div className="create-link">
-        <Link to="/create">Crear una nueva tarjeta</Link>
-      </div>
     </div>
   );
-};
+}
 
 export default Content;

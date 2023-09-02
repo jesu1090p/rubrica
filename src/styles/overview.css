@@ -1,8 +1,7 @@
-/* Basic card styles */
 .card {
     border: 1px solid #ccc;
     padding: 20px;
-    margin: 10px;
+    margin: 2rem 1.8rem;
     text-align: center;
     background-color: #fff;
   }
@@ -13,22 +12,19 @@
   }
   
   .card h2 {
-    font-size: 18px;
+    font-size: 2.2rem;
     margin-top: 10px;
   }
   
   .card p {
-    font-size: 14px;
+    font-size: 1.5rem;
     color: #666;
   }
   
-  /* Favorite button styles */
   .card button {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
   }
   
   .favorite {
@@ -37,10 +33,10 @@
 
   .message {
     position: fixed;
-    bottom: 20px;
+    top: 50%;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(150, 0, 0, 0.8);
     color: orange;
     padding: 10px 20px;
     border-radius: 5px;
@@ -53,14 +49,12 @@
     font-size: 16px;
   }
   
-  /* Mostrar el mensaje */
   .message.show {
     opacity: 1;
     pointer-events: auto;
   }
 
   
-  /* Media queries for responsiveness */
   @media screen and (max-width: 600px) {
     .overview {
       display: flex;

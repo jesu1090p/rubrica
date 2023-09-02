@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/nav-foot.css'
 import 'font-awesome/css/font-awesome.min.css';
 
@@ -7,7 +6,8 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-content">
         <p>Jesus Oviedo</p>
-        <p>Card Rubrica Corte 1</p>
+        <p>R&uacute;brica Corte 1 | Web 2 | CUC 2023-2</p>
+        <p>El prop&oacute;sito es mostrar el uso de los Hooks useEffect, useState y el dominio del localStorage para cargar y almacenar datos din&aacute;micamente.</p>
         <div className="social-icons">
           <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
             <i className="fa fa-facebook"></i>
